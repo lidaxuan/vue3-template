@@ -14,7 +14,7 @@
         <a-menu-item v-for="item in Menu" :key="`${item.id}`">
           <div class="flex items-center">
             <component :is="item.icon" class="mr-1 text-base"></component>
-            {{ item.name }}
+            {{ item.title }}
           </div>
         </a-menu-item>
       </a-menu>
@@ -24,19 +24,14 @@
         <a-menu v-model:selectedKeys="selectedKeys2" v-model:openKeys="openKeys" mode="inline" :router="true" :style="{ height: '100%', borderRight: 0 }">
           <a-sub-menu v-for="item in sideMenu" :key="item.id">
             <template #title>
-              <span>{{ item.name }}</span>
+              <span>{{ item.title }}</span>
             </template>
-            <a-menu-item v-for="sideItem in item.children" :key="sideItem.id" @click="pathClick(sideItem)">{{ sideItem.name }}</a-menu-item>
+            <a-menu-item v-for="sideItem in item.children" :key="sideItem.id" @click="pathClick(sideItem)">{{ sideItem.title }}</a-menu-item>
           </a-sub-menu>
         </a-menu>
       </a-layout-sider>
       <a-layout style="padding: 0 24px 24px">
 
-        <!--        <a-breadcrumb style="margin: 16px 0">-->
-        <!--          <a-breadcrumb-item>Home</a-breadcrumb-item>-->
-        <!--          <a-breadcrumb-item>List</a-breadcrumb-item>-->
-        <!--          <a-breadcrumb-item>App</a-breadcrumb-item>-->
-        <!--        </a-breadcrumb>-->
         <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }">
           <router-view></router-view>
         </a-layout-content>
