@@ -1,24 +1,23 @@
-
 import application from "./app.vue";
-import { createPinia } from "pinia";
-import { createApp as create } from "vue";
-import { createRouter } from "src/router/";
-import { beforeEach } from "src/router/hook";
+import {createPinia} from "pinia";
+import {createApp as create} from "vue";
+import {createRouter} from "src/router/";
+import {beforeEach} from "src/router/hook";
+import ant from "ant-design-vue";
+import type {App} from "vue";
+import * as ElIconModules from "@ant-design/icons-vue";
 
-import type { App } from "vue";
 
-/**
- * @file 创建 Vue 实例
- */
-export function createApp() {
-  const app: App = create(application);
+export const app: App = create(application);
+export const store = createPinia();
+export const router = createRouter();
 
-  const store = createPinia();
-  app.use(store);
-
-  const router = createRouter();
-  router.beforeEach(beforeEach);
-
-  app.use(router);
-  return { app, router };
+for (const name in ElIconModules) {
+  app.component(name, (ElIconModules as any)[name])
 }
+
+router.beforeEach(beforeEach);
+app.use(store);
+app.use(router);
+ant.install(app);
+
