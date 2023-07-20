@@ -21,12 +21,15 @@
     </a-layout-header>
     <a-layout class="" style="height: calc(100% - 64px)">
       <a-layout-sider width="200" style="background: #fff">
+        {{ selectedKeys2 }}
         <a-menu v-model:selectedKeys="selectedKeys2" v-model:openKeys="openKeys" mode="inline" :router="true" :style="{ height: '100%', borderRight: 0 }">
           <a-sub-menu v-for="item in sideMenu" :key="item.id">
             <template #title>
               <span>{{ item.title }}</span>
             </template>
-            <a-menu-item v-for="sideItem in item.children" :key="sideItem.id" @click="pathClick(sideItem)">{{ sideItem.title }}</a-menu-item>
+            <a-menu-item v-for="sideItem in item.children" :key="sideItem.id" @click="pathClick(sideItem)">
+              {{ sideItem.title }}
+            </a-menu-item>
           </a-sub-menu>
         </a-menu>
       </a-layout-sider>
@@ -42,26 +45,38 @@
 
 <script lang="ts" setup>
 import {Menu} from './menu';
-import {ref} from "vue";
+import {ref, toRef} from "vue";
 import {router} from 'src/bootstrap/main';
-console.log('xxx', router);
 
-
-const selectedKeys1 = ref<string[]>(["1"]);
-const selectedKeys2 = ref<string[]>(["1"]);
-const openKeys = ref<string[]>(["sub1"]);
+const selectedKeys1 = ref<string[]>([""]);
+const selectedKeys2 = ref<string[]>([""]);
+const openKeys = ref<string[]>([""]);
 const sideMenu = ref<Array<any>>([]);
 
+Menu.forEach(item1 => {
+  item1.children.forEach(item2 => {
+    item2.children.forEach(item3 => {
+      if (item3.path == router.currentRoute.value.path) {
+        selectedKeys2.value = [item3.id];
+        return;
+      }
+    })
+  })
+})
+
+
 const firstMenuChange = (val: any) => {
+  selectedKeys1.value = [val.key];
   const item = Menu.find(item => item.id == val.key) || {children: [], id: 1};
-  console.log(item.children);
   openKeys.value = [item.children[0].id as any];
   sideMenu.value = [].concat(item.children as any) as any;
 }
-const pathClick = (sideItem: {name: string, path: string, id: number}) => {
+firstMenuChange({key: Menu[0].id});
+
+const pathClick = (sideItem: { name: string, path: string, id: number | string }) => {
   router.push({path: sideItem.path})
 }
-firstMenuChange({key: 1});
+
 </script>
 <style lang="scss" scoped>
 #components-layout-demo-top-side-2 .logo {
